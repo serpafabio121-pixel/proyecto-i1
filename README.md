@@ -37,11 +37,11 @@ activos`; si el proceso termina con un error, los navegadores mostrarán
 `ERR_CONNECTION_REFUSED`.
 
 La misma aplicación funciona en computador y celular: `start_app.py` inicia dos
-servidores HTTPS independientes. Abre `https://localhost:8501` en el PC y
-`https://IP_DEL_COMPUTADOR:8502` en el celular. Acepta una vez el aviso del
-certificado local en cada dispositivo; después se habilitan cámara y video.
-Ambos servidores usan el mismo código, pero cada dispositivo tiene su propia
-sesión y análisis.
+servidores independientes. El PC conserva todas las opciones (cámara, grabación,
+carga y análisis) en `https://localhost:8501`. El acceso del celular en
+`https://IP_DEL_COMPUTADOR:8502` queda limitado a cargar fotos o videos, evitando
+los bloqueos de cámara del navegador móvil. Ambos servidores usan el mismo
+código, pero cada dispositivo tiene su propia sesión y análisis.
 
 Si instalas `cloudflared`, `start_app.py` lo detecta y usa automáticamente una
 URL pública HTTPS confiable para ambos dispositivos, sin aviso de certificado:

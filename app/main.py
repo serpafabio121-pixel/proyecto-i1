@@ -1,4 +1,5 @@
 import streamlit as st
+import os
 
 import home
 
@@ -10,4 +11,4 @@ st.set_page_config(
     initial_sidebar_state="collapsed",
 )
 
-home.show()
+home.show(device_mode=os.getenv("CRACK_DEVICE_MODE", "pc"))

@@ -351,7 +351,8 @@ def _show_analysis(result: Analysis) -> None:
         st.write(result.recommendation)
 
 
-def show() -> None:
+def show(device_mode: str = "pc") -> None:
+    is_mobile = device_mode == "mobile"
     _inject_styles()
     st.markdown(
         '<section class="hero"><h1>Detector de grietas 🧱</h1>'
@@ -364,22 +365,25 @@ def show() -> None:
         "</div>",
         unsafe_allow_html=True,
     )
-    with st.expander("Permisos para usar cámara en el celular"):
-        st.write(
-            "Concede permiso de **Cámara** al navegador. Para grabar video desde "
-            "el celular, usa una URL **HTTPS** y permite el acceso cuando el navegador "
-            "lo solicite."
-        )
+    if not is_mobile:
+        with st.expander("Permisos para usar cámara en el celular"):
+            st.write(
+                "Concede permiso de **Cámara** al navegador. Para grabar video desde "
+                "el celular, usa una URL **HTTPS** y permite el acceso cuando el navegador "
+                "lo solicite."
+            )
     st.write("")
 
-    st.subheader("1. Toma o carga una foto o video")
+    st.subheader("1. Carga una foto o video" if is_mobile else "1. Toma o carga una foto o video")
+    if is_mobile:
+        st.info("Modo celular: carga una foto o video desde tu dispositivo. La cámara directa está desactivada en este acceso.")
     source = st.radio(
         "Origen de la imagen",
-        ("Cargar archivo", "Tomar foto", "Cargar video", "Grabar video"),
+        ("Cargar archivo", "Cargar video") if is_mobile else ("Cargar archivo", "Tomar foto", "Cargar video", "Grabar video"),
         horizontal=True,
         label_visibility="collapsed",
     )
-    if source == "Tomar foto":
+    if source == "Tomar foto" and not is_mobile:
         uploaded = st.camera_input("Toma una foto de la pared")
         if uploaded is None:
             st.caption("Si la cámara no aparece, revisa los permisos del navegador o usa este selector.")

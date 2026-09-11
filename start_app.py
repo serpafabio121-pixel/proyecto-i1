@@ -19,7 +19,7 @@ def port_in_use(port: int) -> bool:
         probe.close()
 
 
-def streamlit_command(port: int, address: str) -> list[str]:
+def streamlit_command(port: int, address: str, device_mode: str) -> list[str]:
     return [
         sys.executable,
         "-m",
@@ -59,8 +59,14 @@ if __name__ == "__main__":
     if port_in_use(8501) or port_in_use(8502):
         raise SystemExit("Los puertos 8501 o 8502 ya están ocupados. Cierra otros servidores y vuelve a ejecutar.")
 
-    pc = subprocess.Popen(streamlit_command(8501, "127.0.0.1"))
-    mobile = subprocess.Popen(streamlit_command(8502, "0.0.0.0"))
+    pc_environment = None
+    mobile_environment = dict(__import__("os").environ)
+    mobile_environment["CRACK_DEVICE_MODE"] = "mobile"
+    pc = subprocess.Popen(streamlit_command(8501, "127.0.0.1", "pc"), env=pc_environment)
+    mobile = subprocess.Popen(
+        streamlit_command(8502, "0.0.0.0", "mobile"),
+        env=mobile_environment,
+    )
     try:
         print("Servidor PC y servidor celular activos. Mantén esta ventana abierta.")
         pc.wait()
