@@ -24,7 +24,12 @@ pip install -r requirements.txt
 streamlit run app/main.py
 ```
 
-Abre la URL local que muestra Streamlit. En móvil se puede usar **Tomar foto**
+La misma aplicación funciona en computador y celular: no hay una versión
+separada. En el computador abre `http://localhost:8501`. Desde otro dispositivo
+de la misma red abre `http://IP_DEL_COMPUTADOR:8501`. El servidor ya está
+configurado para escuchar en toda la red (`0.0.0.0`).
+
+En móvil se puede usar **Tomar foto**
 (con selector alternativo si el navegador bloquea la cámara) o **Grabar video**:
 la cámara aparece en vivo dentro de la página; pulsa `START`, concede permiso a
 la cámara y pulsa `STOP` al terminar. También se
@@ -34,20 +39,19 @@ grabación se guarda como WebM temporal en la carpeta temporal del sistema (un
 formato de video sin audio compatible con Windows) y no se envía a servicios
 externos.
 
-### Uso desde un celular
+### Acceso desde cualquier equipo
 
-El celular no debe abrir `http://localhost:8501`, porque `localhost` apunta al
-propio celular. Ejecuta Streamlit en el computador con:
+Si la configuración no se carga o quieres indicarla explícitamente, ejecuta:
 
 ```bash
 streamlit run app/main.py --server.address 0.0.0.0
 ```
 
-Conecta el celular a la misma red Wi-Fi y abre en su navegador
-`http://IP_DEL_COMPUTADOR:8501`. Para **Grabar video**, los navegadores móviles
-normalmente exigen HTTPS; en un despliegue público usa la URL HTTPS del
-servicio. La opción **Tomar foto** funciona con el permiso de cámara del
-navegador y tiene un selector de archivo alternativo.
+No abras `localhost` desde el celular: allí `localhost` significa el propio
+celular. Para **Grabar video** y acceso directo a cámara, los navegadores
+móviles exigen normalmente HTTPS. En una URL HTTPS pública funcionarán las
+opciones de cámara en computador y celular; en una red local sin HTTPS siempre
+se puede usar **Cargar archivo** como alternativa.
 
 Después del análisis puedes pulsar **Guardar una copia local de este archivo**.
 La aplicación crea `data/uploads/`, usa un nombre único y ofrece un botón para

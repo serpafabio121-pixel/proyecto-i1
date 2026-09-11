@@ -4,3 +4,14 @@ backgroundColor = "#F5F5DC" # Cinza Claro
 secondaryBackgroundColor = "#4caf5033" # Verde com 20% de opacidade em hexadecimal
 textColor = "#616161" # Cinza Escuro
 font = 'monospace'
+
+[server]
+# Una sola instancia puede atender al computador y a otros dispositivos de la
+# misma red. En servicios cloud se respeta el puerto asignado por la plataforma.
+address = "0.0.0.0"
+headless = true
+enableCORS = false
+port = 8501
+
+[browser]
+gatherUsageStats = false
