@@ -34,6 +34,12 @@ configurado para escuchar en toda la red (`0.0.0.0`).
 Para conocer la IP del computador en Windows ejecuta `ipconfig` y usa la
 `Dirección IPv4`, por ejemplo `http://192.168.1.25:8501`.
 
+También puedes copiar la dirección que la propia app muestra en el aviso
+**Para abrir esta misma app en tu celular**. No copies `localhost` ni
+`0.0.0.0`: esas direcciones no sirven para abrirla desde otro dispositivo.
+Si Windows pregunta por permisos de red, permite Python/Streamlit en redes
+privadas. Ambos equipos deben estar en la misma Wi-Fi.
+
 ### Una URL pública para PC y celular
 
 La URL de GitHub (`https://github.com/serpafabio121-pixel/proyecto-i1`) sirve

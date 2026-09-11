@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import io
 import os
+import socket
 import tempfile
 import time
 import uuid
@@ -57,6 +58,19 @@ def _inject_styles() -> None:
         """,
         unsafe_allow_html=True,
     )
+
+
+def _network_url() -> str | None:
+    """Obtiene una IPv4 de la red local para abrir la app desde un celular."""
+    try:
+        addresses = socket.getaddrinfo(socket.gethostname(), None, socket.AF_INET)
+    except OSError:
+        return None
+    for address in addresses:
+        host = address[4][0]
+        if not host.startswith("127."):
+            return f"http://{host}:8501"
+    return None
 
 
 def _open_image(uploaded_file) -> Image.Image:
@@ -317,6 +331,26 @@ def show() -> None:
         "</div>",
         unsafe_allow_html=True,
     )
+    network_url = _network_url()
+    if network_url:
+        st.info(
+            f"**Para abrir esta misma app en tu celular:** conecta ambos equipos a la "
+            f"misma Wi-Fi y abre **{network_url}**. No uses `localhost` ni `0.0.0.0` "
+            "en el celular."
+        )
+    else:
+        st.warning(
+            "No se detectó una IPv4 local. Conecta el computador a una red Wi-Fi y "
+            "abre el puerto 8501 en el firewall."
+        )
+    with st.expander("Permisos para usar cámara en el celular"):
+        st.write(
+            "Concede permiso de **Cámara** al navegador. Para grabar video desde "
+            "el celular, el navegador normalmente exige una URL **HTTPS**; en una "
+            "dirección local HTTP usa Cargar archivo o despliega la app en Streamlit "
+            "Community Cloud. Si la URL no abre, permite Python/Streamlit en el "
+            "firewall de Windows y verifica que ambos dispositivos estén en la misma Wi-Fi."
+        )
     st.write("")
 
     st.subheader("1. Toma o carga una foto o video")
