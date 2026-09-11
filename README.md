@@ -37,22 +37,23 @@ activos`; si el proceso termina con un error, los navegadores mostrarán
 `ERR_CONNECTION_REFUSED`.
 
 La misma aplicación funciona en computador y celular: `start_app.py` inicia dos
-servidores independientes. El PC conserva todas las opciones (cámara, grabación,
-carga y análisis) en `https://localhost:8501`. El acceso del celular en
-`https://IP_DEL_COMPUTADOR:8502` queda limitado a cargar fotos o videos, evitando
-los bloqueos de cámara del navegador móvil. Ambos servidores usan el mismo
-código, pero cada dispositivo tiene su propia sesión y análisis.
+servidores independientes. El PC conserva todas las opciones en
+`http://localhost:8501`. El acceso del celular en
+`http://IP_DEL_COMPUTADOR:8502` queda limitado a cargar fotos o videos, evitando
+los bloqueos de cámara del navegador móvil. No hay certificado local ni aviso
+de conexión insegura. Ambos servidores usan el mismo código, pero cada
+dispositivo tiene su propia sesión y análisis.
 
-Si instalas `cloudflared`, `start_app.py` lo detecta y usa automáticamente una
-URL pública HTTPS confiable para ambos dispositivos, sin aviso de certificado:
+Para una URL pública HTTPS confiable (necesaria si quieres cámara en el
+celular), usa `start_public.py` con `cloudflared`; ese modo no muestra aviso de
+certificado:
 
 ```text
 https://...trycloudflare.com
 ```
 
-Esta es la opción recomendada para cámara en el celular. Sin `cloudflared`, el
-modo local usa un certificado generado por el equipo y el navegador mostrará un
-aviso de seguridad que debes aceptar una vez.
+El modo local de `start_app.py` está diseñado para PC completo y celular con
+carga de archivos, sin certificados.
 Para acceder desde redes diferentes usa `start_public.py` o Streamlit Cloud.
 
 También puedes ejecutar directamente `streamlit run app/main.py`, pero

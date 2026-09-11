@@ -1,13 +1,12 @@
-"""Inicia servidores HTTPS independientes para PC y celular."""
+"""Inicia servidores independientes para PC y celular."""
 
 from __future__ import annotations
 
-import socket
 import subprocess
 import sys
-import shutil
+import socket
 
-from start_mobile import CERT_FILE, KEY_FILE, ensure_certificate, local_ip
+from start_mobile import local_ip
 
 
 def port_in_use(port: int) -> bool:
@@ -28,8 +27,6 @@ def streamlit_command(port: int, address: str, device_mode: str) -> list[str]:
         "app/main.py",
         f"--server.address={address}",
         f"--server.port={port}",
-        f"--server.sslCertFile={CERT_FILE}",
-        f"--server.sslKeyFile={KEY_FILE}",
     ]
 
 
@@ -46,15 +43,11 @@ def check_dependencies() -> None:
 
 if __name__ == "__main__":
     check_dependencies()
-    if shutil.which("cloudflared"):
-        print("Se encontró cloudflared: se abrirá una URL HTTPS pública confiable para PC y celular.")
-        raise SystemExit(subprocess.call([sys.executable, "start_public.py"]))
     ip = local_ip()
-    ensure_certificate(ip)
     print("Detector de grietas")
-    print("PC:      https://localhost:8501")
-    print(f"Celular: https://{ip}:8502")
-    print("Acepta el aviso del certificado en cada dispositivo para habilitar la cámara.")
+    print("PC:      http://localhost:8501")
+    print(f"Celular: http://{ip}:8502")
+    print("El celular queda limitado a cargar fotos y videos; no usa cámara directa.")
     print()
     if port_in_use(8501) or port_in_use(8502):
         raise SystemExit("Los puertos 8501 o 8502 ya están ocupados. Cierra otros servidores y vuelve a ejecutar.")
