@@ -455,9 +455,10 @@ def show() -> None:
         except (OSError, ValueError) as exc:
             st.error(f"No se pudo leer la imagen. Comprueba el formato del archivo: {exc}")
             return
-        st.image(image, caption=f"Imagen cargada: {image.width} × {image.height}px", use_container_width=True)
+        # Sin use_container_width: mantiene compatibilidad con Streamlit 1.31+.
+        st.image(image, caption=f"Imagen cargada: {image.width} × {image.height}px")
         st.info("La foto está lista. Pulsa el botón para iniciar el análisis.")
-        if not st.button("Analizar foto", type="primary", use_container_width=True):
+        if not st.button("Analizar foto", type="primary"):
             st.caption("El análisis se ejecuta localmente y no sube la imagen a ningún servicio.")
             return
         with st.spinner("Analizando contraste, bordes y zonas oscuras…"):
