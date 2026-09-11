@@ -36,18 +36,26 @@ También puedes ejecutar directamente `streamlit run app/main.py`, pero
 direcciones correctas y evita intentar abrir `0.0.0.0`.
 
 Para que el celular abra la cámara y grabe video desde una red local, usa el
-lanzador HTTPS (el acceso normal de PC no cambia):
+lanzador HTTPS (el acceso normal de PC no cambia). **No uses la URL `http://...`
+que imprime `start_app.py` para la cámara del celular.**
 
 ```bash
 python start_mobile.py
 ```
 
-Abre en el celular la URL `https://IP_DEL_COMPUTADOR:8501` que imprime el
+Detén primero cualquier servidor iniciado con `start_app.py`. Abre en el celular
+la URL `https://IP_DEL_COMPUTADOR:8501` que imprime el
 comando, acepta el aviso del certificado local y concede permiso de cámara.
 Este certificado se genera solo en el computador y dura 30 días; no se sube al
 repositorio. Si no quieres aceptar un certificado local, usa el despliegue
 HTTPS de Streamlit Community Cloud. La cámara no puede funcionar en móviles
 con una URL HTTP de red por una restricción de seguridad del navegador.
+
+Si el celular muestra `navigator.mediaDevices is undefined`, estás usando
+`http://` o el certificado HTTPS no fue aceptado. Cierra esa pestaña, inicia
+`python start_mobile.py`, abre la dirección que empieza por `https://` y acepta
+el certificado. Mientras tanto, **Cargar video** permite analizar un video
+grabado previamente sin usar la cámara web.
 
 Para conocer la IP del computador en Windows ejecuta `ipconfig` y usa la
 `Dirección IPv4`, por ejemplo `http://192.168.1.25:8501`.

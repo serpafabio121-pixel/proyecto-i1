@@ -268,7 +268,15 @@ def _record_video() -> bytes | None:
         with open(recording_path, "rb") as recording:
             return recording.read()
 
-    st.info("Pulsa START para comenzar y STOP para terminar. En celular, abre la app con HTTPS y permite el acceso a la cámara.")
+    st.info(
+        "Para grabar desde el celular debes abrir la dirección **https://** que "
+        "muestra `python start_mobile.py`. Si la dirección empieza por `http://`, "
+        "el navegador bloquea la cámara; como alternativa, carga un video ya grabado."
+    )
+    st.warning(
+        "Si ves `navigator.mediaDevices is undefined`, detén el servidor y ejecuta "
+        "`python start_mobile.py`; después abre la URL HTTPS, no la URL HTTP."
+    )
     context = webrtc_streamer(
         key="crack-video-recorder",
         mode=WebRtcMode.SENDRECV,
@@ -285,6 +293,7 @@ def _record_video() -> bytes | None:
         st.session_state.recording_ready = True
         with open(recording_path, "rb") as recording:
             return recording.read()
+    st.caption("¿No puedes usar HTTPS? Cambia a **Cargar video** para seleccionar una grabación del teléfono.")
     return None
 
 
