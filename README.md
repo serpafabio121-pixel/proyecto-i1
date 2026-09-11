@@ -50,12 +50,6 @@ repositorio. Si no quieres aceptar un certificado local, usa el despliegue
 HTTPS de Streamlit Community Cloud. La cámara no puede funcionar en móviles
 con una URL HTTP de red por una restricción de seguridad del navegador.
 
-Si el celular muestra `navigator.mediaDevices is undefined`, estás usando
-`http://` o el certificado HTTPS no fue aceptado. Cierra esa pestaña, inicia
-`python start_mobile.py`, abre la dirección que empieza por `https://` y acepta
-el certificado. Mientras tanto, **Cargar video** permite analizar un video
-grabado previamente sin usar la cámara web.
-
 Para conocer la IP del computador en Windows ejecuta `ipconfig` y usa la
 `Dirección IPv4`, por ejemplo `http://192.168.1.25:8501`.
 

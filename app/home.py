@@ -29,6 +29,8 @@ class Analysis:
     findings: list[str]
     recommendation: str
     urgent: bool
+    seismic_risk: str = ""
+    seismic_reason: str = ""
 
 
 def _inject_styles() -> None:
@@ -151,6 +153,14 @@ def _analyze(image: Image.Image) -> Analysis:
         "La estimación combina oscuridad local, contraste y bordes; puede confundir juntas, sombras o suciedad.",
     ]
     confidence = int(round(55 + min(35, abs(crack_score - 0.35) * 55)))
+    if level == "Sin grieta evidente":
+        seismic_risk, seismic_reason = "Bajo", "No se observan señales visuales claras; mantén vigilancia preventiva."
+    elif level in {"Leve", "Advertencia"}:
+        seismic_risk, seismic_reason = "Moderado", "Una fisura visible requiere seguimiento, especialmente tras vibraciones o sismos."
+    elif level == "Media":
+        seismic_risk, seismic_reason = "Alto", "El patrón podría agravarse con movimiento; solicita revisión antes de intervenir."
+    else:
+        seismic_risk, seismic_reason = "Crítico", "Grietas marcadas o desprendimientos pueden indicar peligro; aléjate y pide inspección urgente."
     return Analysis(
         level=level,
         confidence=max(55, min(90, confidence)),
@@ -160,6 +170,8 @@ def _analyze(image: Image.Image) -> Analysis:
         findings=findings,
         recommendation=recommendation,
         urgent=urgent,
+        seismic_risk=seismic_risk,
+        seismic_reason=seismic_reason,
     )
 
 
@@ -209,6 +221,14 @@ def _combine_video_results(results: list[Analysis]) -> Analysis:
         findings=findings,
         recommendation=recommendation,
         urgent=urgent,
+        seismic_risk={
+            "Sin grieta evidente": "Bajo",
+            "Leve": "Moderado",
+            "Advertencia": "Moderado",
+            "Media": "Alto",
+            "Severa / grave": "Crítico",
+        }[level],
+        seismic_reason="Evaluación combinada de fotogramas; no predice el comportamiento estructural durante un sismo.",
     )
 
 
@@ -273,10 +293,6 @@ def _record_video() -> bytes | None:
         "muestra `python start_mobile.py`. Si la dirección empieza por `http://`, "
         "el navegador bloquea la cámara; como alternativa, carga un video ya grabado."
     )
-    st.warning(
-        "Si ves `navigator.mediaDevices is undefined`, detén el servidor y ejecuta "
-        "`python start_mobile.py`; después abre la URL HTTPS, no la URL HTTP."
-    )
     context = webrtc_streamer(
         key="crack-video-recorder",
         mode=WebRtcMode.SENDRECV,
@@ -306,6 +322,14 @@ def _show_analysis(result: Analysis) -> None:
     with right:
         st.metric("Índice visual", f"{result.crack_score:.2f} / 1.00")
         st.caption("No equivale a una probabilidad clínica o estructural.")
+    if result.seismic_risk:
+        st.markdown("### Riesgo orientativo ante sismo")
+        st.metric("Nivel de precaución", result.seismic_risk)
+        st.caption(result.seismic_reason)
+        st.info(
+            "Este nivel no predice terremotos ni sustituye una evaluación estructural. "
+            "Después de un sismo, evacúa si hay daños nuevos, ruidos, deformación o desprendimientos."
+        )
 
     if result.urgent:
         st.error(
@@ -340,25 +364,11 @@ def show() -> None:
         "</div>",
         unsafe_allow_html=True,
     )
-    network_url = _network_url()
-    if network_url:
-        st.info(
-            f"**Para abrir esta misma app en tu celular:** conecta ambos equipos a la "
-            f"misma Wi-Fi y abre **{network_url}**. No uses `localhost` ni `0.0.0.0` "
-            "en el celular."
-        )
-    else:
-        st.warning(
-            "No se detectó una IPv4 local. Conecta el computador a una red Wi-Fi y "
-            "abre el puerto 8501 en el firewall."
-        )
     with st.expander("Permisos para usar cámara en el celular"):
         st.write(
             "Concede permiso de **Cámara** al navegador. Para grabar video desde "
-            "el celular, el navegador normalmente exige una URL **HTTPS**; en una "
-            "dirección local HTTP usa Cargar archivo o despliega la app en Streamlit "
-            "Community Cloud. Si la URL no abre, permite Python/Streamlit en el "
-            "firewall de Windows y verifica que ambos dispositivos estén en la misma Wi-Fi."
+            "el celular, usa una URL **HTTPS** y permite el acceso cuando el navegador "
+            "lo solicite."
         )
     st.write("")
 
