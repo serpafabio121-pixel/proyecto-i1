@@ -25,11 +25,10 @@ python start_app.py
 ```
 
 La misma aplicación funciona en computador y celular: no hay una versión
-separada. Si la terminal muestra `http://0.0.0.0:8501`, **no abras esa
-dirección**: `0.0.0.0` solo significa "escuchar todas las interfaces". En el
-computador abre `http://localhost:8501`. Desde otro dispositivo
-de la misma red abre `http://IP_DEL_COMPUTADOR:8501`. El servidor ya está
-configurado para escuchar en toda la red (`0.0.0.0`).
+separada. Para una URL que funcione desde cualquier lugar y sin compartir
+Wi-Fi, despliega la app en Streamlit Community Cloud siguiendo la sección
+**Una URL pública**. La dirección de GitHub muestra el código, pero no ejecuta
+la aplicación.
 
 También puedes ejecutar directamente `streamlit run app/main.py`, pero
 `python start_app.py` es la opción recomendada porque imprime las dos
@@ -60,17 +59,13 @@ grabado previamente sin usar la cámara web.
 Para conocer la IP del computador en Windows ejecuta `ipconfig` y usa la
 `Dirección IPv4`, por ejemplo `http://192.168.1.25:8501`.
 
-También puedes copiar la dirección que la propia app muestra en el aviso
-**Para abrir esta misma app en tu celular**. No copies `localhost` ni
-`0.0.0.0`: esas direcciones no sirven para abrirla desde otro dispositivo.
-Si Windows pregunta por permisos de red, permite Python/Streamlit en redes
-privadas. Ambos equipos deben estar en la misma Wi-Fi.
+El modo local con `start_app.py` es opcional y solo sirve dentro de una red
+permitida por el firewall. No uses `localhost` ni `0.0.0.0` en otro dispositivo.
 
 ### Una URL pública para PC y celular
 
-La URL de GitHub (`https://github.com/serpafabio121-pixel/proyecto-i1`) sirve
-para ver y descargar el código, pero no ejecuta Streamlit. Para tener una sola
-URL que funcione en computador y celular:
+Para tener una sola URL HTTPS que funcione en computador y celular, sin importar
+la red Wi-Fi:
 
 1. Entra a [Streamlit Community Cloud](https://share.streamlit.io/) e inicia
    sesión con GitHub.
@@ -78,9 +73,10 @@ URL que funcione en computador y celular:
    archivo `app/main.py`.
 3. Pulsa **Deploy**. Streamlit generará una URL `https://...streamlit.app`.
 
-Abre esa misma URL en ambos dispositivos. Al ser HTTPS, el navegador móvil
-puede solicitar permiso para la cámara y funcionarán **Tomar foto** y
-**Grabar video**. No existen dos versiones: es la misma aplicación responsive.
+Abre esa misma URL en ambos dispositivos, estén donde estén. Al ser HTTPS, el
+navegador móvil puede solicitar permiso para la cámara y funcionarán **Tomar
+foto** y **Grabar video**. No existen dos versiones: es la misma aplicación
+responsive.
 Si el despliegue usa otro proveedor, debe publicar `app/main.py` como una app
 Streamlit HTTPS y ejecutar `pip install -r requirements.txt`.
 

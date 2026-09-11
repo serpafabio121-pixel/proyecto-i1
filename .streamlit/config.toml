@@ -1,9 +1,9 @@
 [theme]
-primaryColor = "#4CAF50" # Verde
-backgroundColor = "#F5F5DC" # Cinza Claro 
-secondaryBackgroundColor = "#4caf5033" # Verde com 20% de opacidade em hexadecimal
-textColor = "#616161" # Cinza Escuro
-font = 'monospace'
+primaryColor = "#38bdf8"
+backgroundColor = "#0f172a"
+secondaryBackgroundColor = "#1e293b"
+textColor = "#e2e8f0"
+font = "sans serif"
 
 [server]
 # Una sola instancia puede atender al computador y a otros dispositivos de la
