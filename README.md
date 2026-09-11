@@ -77,6 +77,23 @@ Abre esa misma URL en ambos dispositivos, estén donde estén. Al ser HTTPS, el
 navegador móvil puede solicitar permiso para la cámara y funcionarán **Tomar
 foto** y **Grabar video**. No existen dos versiones: es la misma aplicación
 responsive.
+
+### URL pública automática para el celular
+
+Si no quieres depender de la misma red Wi-Fi ni configurar un despliegue,
+instala [Cloudflare Tunnel
+(`cloudflared`)](https://developers.cloudflare.com/cloudflare-one/connections/connect-networks/downloads/)
+en el computador y ejecuta:
+
+```bash
+python start_public.py
+```
+
+La terminal mostrará una URL HTTPS `https://...trycloudflare.com`. Abre esa
+misma URL en el PC y en el celular, y permite la cámara cuando el navegador lo
+solicite. No cierres la terminal: el túnel funciona mientras ese proceso esté
+abierto. Esta URL es temporal y cambia al volver a iniciar; no requiere cuenta
+ni clave de Cloudflare.
 Si el despliegue usa otro proveedor, debe publicar `app/main.py` como una app
 Streamlit HTTPS y ejecutar `pip install -r requirements.txt`.
 
