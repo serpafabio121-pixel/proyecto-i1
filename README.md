@@ -24,6 +24,18 @@ pip install -r requirements.txt
 python start_app.py
 ```
 
+Si aparece `No module named streamlit`, el entorno virtual está activo pero
+vacío. Instala las dependencias usando exactamente el mismo Python:
+
+```powershell
+python -m pip install -r requirements.txt
+python start_app.py
+```
+
+No abras las URLs hasta que la terminal muestre `Servidor PC y servidor celular
+activos`; si el proceso termina con un error, los navegadores mostrarán
+`ERR_CONNECTION_REFUSED`.
+
 La misma aplicación funciona en computador y celular: `start_app.py` inicia dos
 servidores HTTPS independientes. Abre `https://localhost:8501` en el PC y
 `https://IP_DEL_COMPUTADOR:8502` en el celular. Acepta una vez el aviso del

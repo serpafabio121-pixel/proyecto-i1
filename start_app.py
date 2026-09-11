@@ -32,7 +32,19 @@ def streamlit_command(port: int, address: str) -> list[str]:
     ]
 
 
+def check_dependencies() -> None:
+    try:
+        import streamlit  # noqa: F401
+    except ModuleNotFoundError as exc:
+        raise SystemExit(
+            "Faltan dependencias en este entorno de Python. Ejecuta primero:\n"
+            f'  "{sys.executable}" -m pip install -r requirements.txt\n'
+            "Después vuelve a ejecutar: python start_app.py"
+        ) from exc
+
+
 if __name__ == "__main__":
+    check_dependencies()
     ip = local_ip()
     ensure_certificate(ip)
     print("Detector de grietas")
