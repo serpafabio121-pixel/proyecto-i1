@@ -446,8 +446,13 @@ def show() -> None:
             st.error(f"No se pudo leer la imagen. Comprueba el formato del archivo: {exc}")
             return
         st.image(image, caption=f"Imagen cargada: {image.width} × {image.height}px", use_container_width=True)
-        with st.spinner("Analizando patrones visuales localmente…"):
+        st.info("La foto está lista. Pulsa el botón para iniciar el análisis.")
+        if not st.button("Analizar foto", type="primary", use_container_width=True):
+            st.caption("El análisis se ejecuta localmente y no sube la imagen a ningún servicio.")
+            return
+        with st.spinner("Analizando contraste, bordes y zonas oscuras…"):
             result = _analyze(image)
+        st.success("Análisis terminado.")
     _show_analysis(result)
     if st.button("Guardar una copia local de este archivo", type="secondary"):
         media_bytes = uploaded.getvalue() if hasattr(uploaded, "getvalue") else uploaded
