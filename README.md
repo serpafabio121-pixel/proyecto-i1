@@ -34,6 +34,24 @@ configurado para escuchar en toda la red (`0.0.0.0`).
 Para conocer la IP del computador en Windows ejecuta `ipconfig` y usa la
 `Dirección IPv4`, por ejemplo `http://192.168.1.25:8501`.
 
+### Una URL pública para PC y celular
+
+La URL de GitHub (`https://github.com/serpafabio121-pixel/proyecto-i1`) sirve
+para ver y descargar el código, pero no ejecuta Streamlit. Para tener una sola
+URL que funcione en computador y celular:
+
+1. Entra a [Streamlit Community Cloud](https://share.streamlit.io/) e inicia
+   sesión con GitHub.
+2. Elige el repositorio `serpafabio121-pixel/proyecto-i1`, la rama `main` y el
+   archivo `app/main.py`.
+3. Pulsa **Deploy**. Streamlit generará una URL `https://...streamlit.app`.
+
+Abre esa misma URL en ambos dispositivos. Al ser HTTPS, el navegador móvil
+puede solicitar permiso para la cámara y funcionarán **Tomar foto** y
+**Grabar video**. No existen dos versiones: es la misma aplicación responsive.
+Si el despliegue usa otro proveedor, debe publicar `app/main.py` como una app
+Streamlit HTTPS y ejecutar `pip install -r requirements.txt`.
+
 En móvil se puede usar **Tomar foto**
 (con selector alternativo si el navegador bloquea la cámara) o **Grabar video**:
 la cámara aparece en vivo dentro de la página; pulsa `START`, concede permiso a
