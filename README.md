@@ -24,13 +24,12 @@ pip install -r requirements.txt
 python start_app.py
 ```
 
-La misma aplicación funciona en computador y celular: no hay una versión
-separada. `start_app.py` inicia HTTPS y muestra dos direcciones: abre la de PC
-en el computador y la de celular en el teléfono. En cada dispositivo acepta
-una vez el aviso del certificado local; después se habilitan cámara y video.
-La misma instancia admite ambos dispositivos al mismo tiempo, cada uno con su
-propia sesión y análisis. Si el puerto 8501 ya está ocupado, no inicies otro
-servidor: usa las dos direcciones que muestra el lanzador.
+La misma aplicación funciona en computador y celular: `start_app.py` inicia dos
+servidores HTTPS independientes. Abre `https://localhost:8501` en el PC y
+`https://IP_DEL_COMPUTADOR:8502` en el celular. Acepta una vez el aviso del
+certificado local en cada dispositivo; después se habilitan cámara y video.
+Ambos servidores usan el mismo código, pero cada dispositivo tiene su propia
+sesión y análisis.
 Para acceder desde redes diferentes usa `start_public.py` o Streamlit Cloud.
 
 También puedes ejecutar directamente `streamlit run app/main.py`, pero
@@ -38,7 +37,9 @@ También puedes ejecutar directamente `streamlit run app/main.py`, pero
 direcciones correctas y evita intentar abrir `0.0.0.0`.
 
 Para que el celular abra la cámara y grabe video desde una red local, ejecuta
-`start_app.py`; ya no debes usar una dirección `http://`.
+`start_app.py` y copia la URL que dice **Celular**. Es el puerto `8502`, no el
+puerto del PC. Los dos equipos deben poder comunicarse por la red local y el
+firewall debe permitir Python en redes privadas.
 
 ```bash
 python start_mobile.py
