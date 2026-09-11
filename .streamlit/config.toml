@@ -14,4 +14,6 @@ enableCORS = false
 port = 8501
 
 [browser]
+# 0.0.0.0 permite escuchar la red, pero no debe abrirse como URL.
+serverAddress = "localhost"
 gatherUsageStats = false

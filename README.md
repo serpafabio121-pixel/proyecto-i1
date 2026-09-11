@@ -25,9 +25,14 @@ streamlit run app/main.py
 ```
 
 La misma aplicación funciona en computador y celular: no hay una versión
-separada. En el computador abre `http://localhost:8501`. Desde otro dispositivo
+separada. Si la terminal muestra `http://0.0.0.0:8501`, **no abras esa
+dirección**: `0.0.0.0` solo significa "escuchar todas las interfaces". En el
+computador abre `http://localhost:8501`. Desde otro dispositivo
 de la misma red abre `http://IP_DEL_COMPUTADOR:8501`. El servidor ya está
 configurado para escuchar en toda la red (`0.0.0.0`).
+
+Para conocer la IP del computador en Windows ejecuta `ipconfig` y usa la
+`Dirección IPv4`, por ejemplo `http://192.168.1.25:8501`.
 
 En móvil se puede usar **Tomar foto**
 (con selector alternativo si el navegador bloquea la cámara) o **Grabar video**:
