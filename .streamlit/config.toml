@@ -10,7 +10,6 @@ font = 'monospace'
 # misma red. En servicios cloud se respeta el puerto asignado por la plataforma.
 address = "0.0.0.0"
 headless = true
-enableCORS = false
 port = 8501
 
 [browser]
