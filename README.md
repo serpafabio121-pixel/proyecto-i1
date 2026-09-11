@@ -25,18 +25,17 @@ python start_app.py
 ```
 
 La misma aplicación funciona en computador y celular: no hay una versión
-separada. Para una URL que funcione desde cualquier lugar y sin compartir
-Wi-Fi, despliega la app en Streamlit Community Cloud siguiendo la sección
-**Una URL pública**. La dirección de GitHub muestra el código, pero no ejecuta
-la aplicación.
+separada. `start_app.py` inicia HTTPS y muestra dos direcciones: abre la de PC
+en el computador y la de celular en el teléfono. En cada dispositivo acepta
+una vez el aviso del certificado local; después se habilitan cámara y video.
+Para acceder desde redes diferentes usa `start_public.py` o Streamlit Cloud.
 
 También puedes ejecutar directamente `streamlit run app/main.py`, pero
 `python start_app.py` es la opción recomendada porque imprime las dos
 direcciones correctas y evita intentar abrir `0.0.0.0`.
 
-Para que el celular abra la cámara y grabe video desde una red local, usa el
-lanzador HTTPS (el acceso normal de PC no cambia). **No uses la URL `http://...`
-que imprime `start_app.py` para la cámara del celular.**
+Para que el celular abra la cámara y grabe video desde una red local, ejecuta
+`start_app.py`; ya no debes usar una dirección `http://`.
 
 ```bash
 python start_mobile.py

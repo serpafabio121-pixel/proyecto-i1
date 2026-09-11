@@ -1,30 +1,20 @@
-"""Inicia el detector con una URL válida para el equipo y otra para la red local."""
+"""Inicia el detector por HTTPS para que PC y celular puedan usar la cámara."""
 
 from __future__ import annotations
 
-import socket
 import subprocess
 import sys
 
-
-def _local_ip() -> str:
-    try:
-        connection = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        connection.connect(("8.8.8.8", 80))
-        address = connection.getsockname()[0]
-        connection.close()
-        return address
-    except OSError:
-        return "IP_DEL_COMPUTADOR"
+from start_mobile import CERT_FILE, KEY_FILE, ensure_certificate, local_ip
 
 
 if __name__ == "__main__":
-    ip = _local_ip()
+    ip = local_ip()
+    ensure_certificate(ip)
     print("Detector de grietas")
-    print("PC:      http://localhost:8501")
-    print(f"Celular: http://{ip}:8501")
-    print("Ambos equipos deben estar en la misma Wi-Fi.")
-    print("Para cámara en celular, usa una URL HTTPS de Streamlit Community Cloud.")
+    print("PC:      https://localhost:8501")
+    print(f"Celular: https://{ip}:8501")
+    print("Acepta el aviso del certificado en cada dispositivo para habilitar la cámara.")
     print()
     raise SystemExit(
         subprocess.call(
@@ -36,6 +26,8 @@ if __name__ == "__main__":
                 "app/main.py",
                 "--server.address=0.0.0.0",
                 "--server.port=8501",
+                f"--server.sslCertFile={CERT_FILE}",
+                f"--server.sslKeyFile={KEY_FILE}",
             ]
         )
     )
