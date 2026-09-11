@@ -28,6 +28,9 @@ La misma aplicación funciona en computador y celular: no hay una versión
 separada. `start_app.py` inicia HTTPS y muestra dos direcciones: abre la de PC
 en el computador y la de celular en el teléfono. En cada dispositivo acepta
 una vez el aviso del certificado local; después se habilitan cámara y video.
+La misma instancia admite ambos dispositivos al mismo tiempo, cada uno con su
+propia sesión y análisis. Si el puerto 8501 ya está ocupado, no inicies otro
+servidor: usa las dos direcciones que muestra el lanzador.
 Para acceder desde redes diferentes usa `start_public.py` o Streamlit Cloud.
 
 También puedes ejecutar directamente `streamlit run app/main.py`, pero
