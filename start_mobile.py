@@ -52,7 +52,11 @@ def ensure_certificate(address: str) -> None:
         .not_valid_after(datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(days=30))
         .add_extension(
             x509.SubjectAlternativeName(
-                [x509.IPAddress(ipaddress.ip_address(address))]
+                [
+                    x509.DNSName("localhost"),
+                    x509.IPAddress(ipaddress.ip_address("127.0.0.1")),
+                    x509.IPAddress(ipaddress.ip_address(address)),
+                ]
             ),
             critical=False,
         )

@@ -5,6 +5,7 @@ from __future__ import annotations
 import socket
 import subprocess
 import sys
+import shutil
 
 from start_mobile import CERT_FILE, KEY_FILE, ensure_certificate, local_ip
 
@@ -45,6 +46,9 @@ def check_dependencies() -> None:
 
 if __name__ == "__main__":
     check_dependencies()
+    if shutil.which("cloudflared"):
+        print("Se encontró cloudflared: se abrirá una URL HTTPS pública confiable para PC y celular.")
+        raise SystemExit(subprocess.call([sys.executable, "start_public.py"]))
     ip = local_ip()
     ensure_certificate(ip)
     print("Detector de grietas")

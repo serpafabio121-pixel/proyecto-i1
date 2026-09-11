@@ -42,6 +42,17 @@ servidores HTTPS independientes. Abre `https://localhost:8501` en el PC y
 certificado local en cada dispositivo; después se habilitan cámara y video.
 Ambos servidores usan el mismo código, pero cada dispositivo tiene su propia
 sesión y análisis.
+
+Si instalas `cloudflared`, `start_app.py` lo detecta y usa automáticamente una
+URL pública HTTPS confiable para ambos dispositivos, sin aviso de certificado:
+
+```text
+https://...trycloudflare.com
+```
+
+Esta es la opción recomendada para cámara en el celular. Sin `cloudflared`, el
+modo local usa un certificado generado por el equipo y el navegador mostrará un
+aviso de seguridad que debes aceptar una vez.
 Para acceder desde redes diferentes usa `start_public.py` o Streamlit Cloud.
 
 También puedes ejecutar directamente `streamlit run app/main.py`, pero
