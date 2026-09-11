@@ -4,6 +4,8 @@ __pycache__/
 *$py.class
 
 *.zip
+.streamlit/mobile-cert.pem
+.streamlit/mobile-key.pem
 
 # C extensions
 *.so

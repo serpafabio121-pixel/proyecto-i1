@@ -65,4 +65,5 @@ opencv-python-headless
 streamlit
 streamlit-webrtc
 av
+cryptography
 fpdf
