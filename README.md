@@ -21,7 +21,7 @@ python -m venv .venv
 # macOS/Linux:
 # source .venv/bin/activate
 pip install -r requirements.txt
-streamlit run app/main.py
+python start_app.py
 ```
 
 La misma aplicación funciona en computador y celular: no hay una versión
@@ -30,6 +30,10 @@ dirección**: `0.0.0.0` solo significa "escuchar todas las interfaces". En el
 computador abre `http://localhost:8501`. Desde otro dispositivo
 de la misma red abre `http://IP_DEL_COMPUTADOR:8501`. El servidor ya está
 configurado para escuchar en toda la red (`0.0.0.0`).
+
+También puedes ejecutar directamente `streamlit run app/main.py`, pero
+`python start_app.py` es la opción recomendada porque imprime las dos
+direcciones correctas y evita intentar abrir `0.0.0.0`.
 
 Para conocer la IP del computador en Windows ejecuta `ipconfig` y usa la
 `Dirección IPv4`, por ejemplo `http://192.168.1.25:8501`.
