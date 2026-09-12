@@ -32,8 +32,9 @@ PC:      http://localhost:8501
 Usa la primera dirección en el celular y la segunda en el PC. El parámetro
 `device=mobile` oculta cámara y grabación exclusivamente en el celular. El PC conserva todas las funciones:
 tomar foto, grabar video, cargar archivos y analizar. El celular se detecta
-automáticamente por el navegador y queda limitado a **Cargar archivo** y
-**Cargar video**, sin permisos de cámara ni grabación directa.
+automáticamente por el navegador. En el celular puedes cargar archivos o
+grabar video; dentro de **Grabar video** elige **Trasera** o **Frontal** para
+cambiar la cámara del teléfono.
 La detección móvil requiere Streamlit 1.37 o superior; el instalador la fija
 automáticamente para que no aparezcan los controles de cámara en el teléfono
 ni se oculten por una versión antigua.

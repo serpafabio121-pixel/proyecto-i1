@@ -293,6 +293,13 @@ def _record_video() -> bytes | None:
         with open(recording_path, "rb") as recording:
             return recording.read()
 
+    camera_side = st.radio(
+        "Cámara para grabar",
+        ("Trasera", "Frontal"),
+        horizontal=True,
+        key="recording_camera_side",
+    )
+    facing_mode = "environment" if camera_side == "Trasera" else "user"
     st.info(
         "Para grabar desde el celular debes abrir la dirección **https://** que "
         "muestra `python start_mobile.py`. Si la dirección empieza por `http://`, "
@@ -301,7 +308,10 @@ def _record_video() -> bytes | None:
     context = webrtc_streamer(
         key="crack-video-recorder",
         mode=WebRtcMode.SENDRECV,
-        media_stream_constraints={"video": True, "audio": False},
+        media_stream_constraints={
+            "video": {"facingMode": {"exact": facing_mode}},
+            "audio": False,
+        },
         # WebM + VP8 is reliable for video-only recordings on Windows.
         in_recorder_factory=lambda: MediaRecorder(recording_path, format="webm"),
         video_html_attrs={"controls": True, "autoPlay": True, "muted": True},
@@ -379,7 +389,7 @@ def show(device_mode: str = "pc") -> None:
     st.subheader("Carga una foto o video")
     source = st.radio(
         "Origen de la imagen",
-        ("Cargar archivo", "Cargar video") if is_mobile else ("Cargar archivo", "Tomar foto", "Cargar video", "Grabar video"),
+        ("Cargar archivo", "Cargar video", "Grabar video") if is_mobile else ("Cargar archivo", "Tomar foto", "Cargar video", "Grabar video"),
         horizontal=True,
         label_visibility="collapsed",
     )
