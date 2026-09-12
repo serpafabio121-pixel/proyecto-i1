@@ -1,5 +1,5 @@
 # Dependencias usadas por el MVP actual (sin TensorFlow ni modelos pesados).
-streamlit>=1.31,<2
+streamlit>=1.37,<2
 numpy>=1.26,<3
 pillow>=10,<12
 opencv-python-headless>=4.9,<5

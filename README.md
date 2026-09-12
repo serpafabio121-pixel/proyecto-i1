@@ -32,6 +32,9 @@ Usa la IP que aparece en la terminal. El PC conserva todas las funciones:
 tomar foto, grabar video, cargar archivos y analizar. El celular se detecta
 automáticamente por el navegador y queda limitado a **Cargar archivo** y
 **Cargar video**, sin permisos de cámara ni grabación directa.
+La detección móvil requiere Streamlit 1.37 o superior; el instalador la fija
+automáticamente para que no aparezcan los controles de cámara en el teléfono
+ni se oculten por una versión antigua.
 
 Para que el celular abra `http://IP_DEL_COMPUTADOR:8501`, ambos dispositivos
 deben estar en la misma red y Windows debe permitir Python en redes privadas.
