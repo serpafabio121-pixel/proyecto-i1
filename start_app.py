@@ -30,9 +30,9 @@ if __name__ == "__main__":
 
     ip = local_ip()
     print("Detector de grietas")
-    print(f"PC y celular: http://{ip}:8501")
-    print("En el PC también puedes abrir: http://localhost:8501")
-    print("Una sola URL; el celular se limita automáticamente a cargar archivos.")
+    print(f"Celular: http://{ip}:8501")
+    print("PC:      http://localhost:8501")
+    print("El celular se limita automáticamente a cargar archivos.")
     print("Mantén esta ventana abierta.")
     raise SystemExit(
         subprocess.call(
