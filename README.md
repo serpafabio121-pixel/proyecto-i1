@@ -68,6 +68,8 @@ Para que el celular abra la cámara y grabe video desde una red local, ejecuta
 `start_app.py` y copia la URL que dice **Celular**. Es el puerto `8502`, no el
 puerto del PC. Los dos equipos deben poder comunicarse por la red local y el
 firewall debe permitir Python en redes privadas.
+La IP puede cambiar; usa siempre la URL que imprime la ejecución actual. Si
+aparecen varias redes o VPN, elige la dirección `192.168.x.x` de la Wi-Fi.
 
 ```bash
 python start_mobile.py

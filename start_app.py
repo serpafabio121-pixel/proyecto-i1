@@ -47,6 +47,7 @@ if __name__ == "__main__":
     print("Detector de grietas")
     print("PC:      http://localhost:8501")
     print(f"Celular: http://{ip}:8502")
+    print("Usa la IP actual impresa aquí; no reutilices una URL de una ejecución anterior.")
     print("El celular queda limitado a cargar fotos y videos; no usa cámara directa.")
     print()
     if port_in_use(8501) or port_in_use(8502):

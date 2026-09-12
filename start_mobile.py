@@ -17,14 +17,22 @@ KEY_FILE = CERT_DIR / "mobile-key.pem"
 
 
 def local_ip() -> str:
-    sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    try:
-        sock.connect(("8.8.8.8", 80))
-        return sock.getsockname()[0]
-    except OSError:
-        return "127.0.0.1"
-    finally:
-        sock.close()
+    addresses = {
+        item[4][0]
+        for item in socket.getaddrinfo(socket.gethostname(), None, socket.AF_INET)
+        if not item[4][0].startswith("127.")
+    }
+    if addresses:
+        # Prefer the usual physical Wi-Fi/LAN ranges over virtual adapters.
+        ordered = sorted(
+            addresses,
+            key=lambda value: (
+                0 if value.startswith("192.168.") else 1 if value.startswith("10.") else 2,
+                value,
+            ),
+        )
+        return ordered[0]
+    return "127.0.0.1"
 
 
 def ensure_certificate(address: str) -> None:
