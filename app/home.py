@@ -428,18 +428,14 @@ def show(device_mode: str = "pc") -> None:
     if media_kind == "video":
         st.video(uploaded)
         st.caption("El video se procesa localmente: solo se leen fotogramas representativos y no se envía a terceros.")
-        progress = st.progress(0, text="Esperando análisis…")
         try:
             with st.spinner("Muestreando fotogramas y analizando bordes localmente…"):
                 video_bytes = uploaded.getvalue() if hasattr(uploaded, "getvalue") else uploaded
                 result, sampled_frames, duration = _analyze_video(
-                    video_bytes,
-                    progress_callback=lambda value: progress.progress(value, text=f"Procesando fotograma {int(value * 100)}%"),
+                    video_bytes
                 )
-            progress.progress(1.0, text=f"Listo: {sampled_frames} fotogramas analizados")
             st.caption(f"Duración aproximada: {duration:.1f} s · máximo 8 fotogramas representativos")
         except (OSError, ValueError, cv2.error) as exc:
-            progress.empty()
             st.error(f"No se pudo procesar el video. Comprueba que el formato sea compatible: {exc}")
             return
     else:
