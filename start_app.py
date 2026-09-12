@@ -30,7 +30,7 @@ if __name__ == "__main__":
 
     ip = local_ip()
     print("Detector de grietas")
-    print(f"Celular: http://{ip}:8501")
+    print(f"Celular: http://{ip}:8501/?device=mobile")
     print("PC:      http://localhost:8501")
     print("El celular se limita automáticamente a cargar archivos.")
     print("Mantén esta ventana abierta.")

@@ -357,13 +357,17 @@ def _show_analysis(result: Analysis) -> None:
 
 
 def show(device_mode: str = "pc") -> None:
-    if device_mode == "pc":
+    requested_mode = st.query_params.get("device", "")
+    if requested_mode == "mobile":
+        device_mode = "mobile"
+    elif device_mode == "pc":
         context = getattr(st, "context", None)
         headers = getattr(context, "headers", {}) if context is not None else {}
         user_agent = headers.get("User-Agent", "").lower()
-        device_mode = "mobile" if any(
+        detected_mode = "mobile" if any(
             marker in user_agent for marker in ("android", "iphone", "ipad", "mobile")
         ) else "pc"
+        device_mode = detected_mode
     is_mobile = device_mode == "mobile"
     _inject_styles()
     st.markdown(

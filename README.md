@@ -25,11 +25,12 @@ python start_app.py
 El lanzador inicia un único servidor para ambos dispositivos:
 
 ```text
-Celular: http://IP_DEL_COMPUTADOR:8501
+Celular: http://IP_DEL_COMPUTADOR:8501/?device=mobile
 PC:      http://localhost:8501
 ```
 
-Usa la primera dirección en el celular y la segunda en el PC. El PC conserva todas las funciones:
+Usa la primera dirección en el celular y la segunda en el PC. El parámetro
+`device=mobile` oculta cámara y grabación exclusivamente en el celular. El PC conserva todas las funciones:
 tomar foto, grabar video, cargar archivos y analizar. El celular se detecta
 automáticamente por el navegador y queda limitado a **Cargar archivo** y
 **Cargar video**, sin permisos de cámara ni grabación directa.
