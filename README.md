@@ -1,179 +1,53 @@
 # Detector de grietas
 
-MVP web en Streamlit para tomar o cargar una foto o video de una pared y obtener una
-clasificación visual **orientativa**: sin grieta evidente, leve, advertencia,
-media o severa/grave. El análisis se ejecuta localmente, sin servicios externos
-ni claves, usando una heurística explicable de oscuridad, contraste y bordes.
-En videos se muestrean hasta ocho fotogramas representativos y se combinan sus
-resultados.
+Aplicación Streamlit para analizar fotos y videos de paredes con una heurística
+local. Entrega una clasificación orientativa, hallazgos, recomendación y nivel
+de precaución ante sismo. No reemplaza a un ingeniero o inspector.
 
-## Requisitos
+## Ejecutar en Visual Studio Code (Windows)
 
-- Python 3.10 o superior
-- pip
-
-## Instalación y uso
-
-```bash
-python -m venv .venv
-# Windows PowerShell:
-.venv\Scripts\Activate.ps1
-# macOS/Linux:
-# source .venv/bin/activate
-pip install -r requirements.txt
-python start_app.py
-```
-
-Si aparece `No module named streamlit`, el entorno virtual está activo pero
-vacío. Instala las dependencias usando exactamente el mismo Python:
+Abre la terminal en la carpeta del proyecto y ejecuta exactamente:
 
 ```powershell
 python -m pip install -r requirements.txt
 python start_app.py
 ```
 
-No abras las URLs hasta que la terminal muestre `Servidor PC y servidor celular
-activos`; si el proceso termina con un error, los navegadores mostrarán
-`ERR_CONNECTION_REFUSED`.
+Si usas un entorno virtual:
 
-El despliegue en Streamlit Community Cloud usa Python 3.11 y un conjunto mínimo
-de dependencias. No necesita instalar TensorFlow ni descargar modelos para este
-MVP: el análisis actual es local y heurístico.
+```powershell
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1
+python -m pip install -r requirements.txt
+python start_app.py
+```
 
-La misma aplicación funciona en computador y celular: `start_app.py` inicia dos
-servidores independientes. El PC conserva todas las opciones en
-`http://localhost:8501`. El acceso del celular en
-`http://IP_DEL_COMPUTADOR:8502` queda limitado a cargar fotos o videos, evitando
-los bloqueos de cámara del navegador móvil. No hay certificado local ni aviso
-de conexión insegura. Ambos servidores usan el mismo código, pero cada
-dispositivo tiene su propia sesión y análisis.
-
-Para una URL pública HTTPS confiable (necesaria si quieres cámara en el
-celular), usa `start_public.py` con `cloudflared`; ese modo no muestra aviso de
-certificado:
+El lanzador inicia los dos accesos y mantiene ambos servidores activos:
 
 ```text
-https://...trycloudflare.com
+PC:      http://localhost:8501
+Celular: http://IP_DEL_COMPUTADOR:8502
 ```
 
-El modo local de `start_app.py` está diseñado para PC completo y celular con
-carga de archivos, sin certificados.
-Para acceder desde redes diferentes usa `start_public.py` o Streamlit Cloud.
+Usa la IP que aparece en la terminal en cada ejecución. El PC conserva todas
+las funciones: tomar foto, grabar video, cargar archivos y analizar. El celular
+queda intencionalmente limitado a **Cargar archivo** y **Cargar video**, sin
+permisos de cámara ni grabación directa.
 
-También puedes ejecutar directamente `streamlit run app/main.py`, pero
-`python start_app.py` es la opción recomendada porque imprime las dos
-direcciones correctas y evita intentar abrir `0.0.0.0`.
+Para que el celular abra `http://IP_DEL_COMPUTADOR:8502`, ambos dispositivos
+deben estar en la misma red y Windows debe permitir Python en redes privadas.
+GitHub no es la URL de la aplicación: solo almacena el código.
 
-Para que el celular abra la cámara y grabe video desde una red local, ejecuta
-`start_app.py` y copia la URL que dice **Celular**. Es el puerto `8502`, no el
-puerto del PC. Los dos equipos deben poder comunicarse por la red local y el
-firewall debe permitir Python en redes privadas.
-La IP puede cambiar; usa siempre la URL que imprime la ejecución actual. Si
-aparecen varias redes o VPN, elige la dirección `192.168.x.x` de la Wi-Fi.
+## Qué hace el análisis
 
-```bash
-python start_mobile.py
-```
+- Muestrea hasta ocho fotogramas de un video.
+- Combina oscuridad local, morfología, bordes y componentes alargados para
+  encontrar patrones compatibles con grietas.
+- Informa `Sin grieta evidente`, `Leve`, `Advertencia`, `Media` o
+  `Severa / grave`.
+- Añade riesgo orientativo ante sismo: `Bajo`, `Moderado`, `Alto` o `Crítico`.
+- Permite guardar y descargar una copia del medio analizado.
 
-Detén primero cualquier servidor iniciado con `start_app.py`. Abre en el celular
-la URL `https://IP_DEL_COMPUTADOR:8501` que imprime el
-comando, acepta el aviso del certificado local y concede permiso de cámara.
-Este certificado se genera solo en el computador y dura 30 días; no se sube al
-repositorio. Si no quieres aceptar un certificado local, usa el despliegue
-HTTPS de Streamlit Community Cloud. La cámara no puede funcionar en móviles
-con una URL HTTP de red por una restricción de seguridad del navegador.
-
-Para conocer la IP del computador en Windows ejecuta `ipconfig` y usa la
-`Dirección IPv4`, por ejemplo `http://192.168.1.25:8501`.
-
-El modo local con `start_app.py` es opcional y solo sirve dentro de una red
-permitida por el firewall. No uses `localhost` ni `0.0.0.0` en otro dispositivo.
-
-### Una URL pública para PC y celular
-
-Para tener una sola URL HTTPS que funcione en computador y celular, sin importar
-la red Wi-Fi:
-
-1. Entra a [Streamlit Community Cloud](https://share.streamlit.io/) e inicia
-   sesión con GitHub.
-2. Elige el repositorio `serpafabio121-pixel/proyecto-i1`, la rama `main` y el
-   archivo `app/main.py`.
-3. Pulsa **Deploy**. Streamlit generará una URL `https://...streamlit.app`.
-
-Abre esa misma URL en ambos dispositivos, estén donde estén. Al ser HTTPS, el
-navegador móvil puede solicitar permiso para la cámara y funcionarán **Tomar
-foto** y **Grabar video**. No existen dos versiones: es la misma aplicación
-responsive.
-
-### URL pública automática para el celular
-
-Si no quieres depender de la misma red Wi-Fi ni configurar un despliegue,
-instala [Cloudflare Tunnel
-(`cloudflared`)](https://developers.cloudflare.com/cloudflare-one/connections/connect-networks/downloads/)
-en el computador y ejecuta:
-
-```bash
-python start_public.py
-```
-
-La terminal mostrará una URL HTTPS `https://...trycloudflare.com`. Abre esa
-misma URL en el PC y en el celular, y permite la cámara cuando el navegador lo
-solicite. No cierres la terminal: el túnel funciona mientras ese proceso esté
-abierto. Esta URL es temporal y cambia al volver a iniciar; no requiere cuenta
-ni clave de Cloudflare.
-Si el despliegue usa otro proveedor, debe publicar `app/main.py` como una app
-Streamlit HTTPS y ejecutar `pip install -r requirements.txt`.
-
-En móvil se puede usar **Tomar foto**
-(con selector alternativo si el navegador bloquea la cámara) o **Grabar video**:
-la cámara aparece en vivo dentro de la página; pulsa `START`, concede permiso a
-la cámara y pulsa `STOP` al terminar. También se
-puede seleccionar un video existente. Se aceptan JPG, PNG, WebP, MP4, MOV, AVI,
-WebM y M4V. El video se previsualiza con controles y se procesa localmente; la
-grabación se guarda como WebM temporal en la carpeta temporal del sistema (un
-formato de video sin audio compatible con Windows) y no se envía a servicios
-externos.
-
-### Acceso desde cualquier equipo
-
-Si la configuración no se carga o quieres indicarla explícitamente, ejecuta:
-
-```bash
-streamlit run app/main.py --server.address 0.0.0.0
-```
-
-No abras `localhost` desde el celular: allí `localhost` significa el propio
-celular. Para **Grabar video** y acceso directo a cámara, los navegadores
-móviles exigen normalmente HTTPS. En una URL HTTPS pública funcionarán las
-opciones de cámara en computador y celular; en una red local sin HTTPS siempre
-se puede usar **Cargar archivo** como alternativa.
-
-Después del análisis puedes pulsar **Guardar una copia local de este archivo**.
-La aplicación crea `data/uploads/`, usa un nombre único y ofrece un botón para
-descargar la copia. La grabación temporal usada para analizar el video se limpia;
-solo permanece la copia que el usuario decide guardar.
-
-## Limitaciones y seguridad
-
-Este MVP no segmenta una grieta con un modelo entrenado ni realiza un diagnóstico
-estructural. En video solo se leen hasta ocho fotogramas, por lo que una grieta
-que aparece entre muestras puede no detectarse. Sombras, suciedad, juntas,
-textura, baja luz, movimiento y perspectiva pueden producir falsos positivos o
-negativos. La confianza mostrada describe la
-estabilidad del indicador heurístico, no una probabilidad de daño.
-
-El tamaño máximo de foto o video es 50 MB. Los formatos dependen de los
-decodificadores disponibles en el equipo donde se ejecuta Streamlit.
-En despliegues efímeros, los archivos de `data/uploads/` pueden perderse al
-reiniciar el servicio; descarga las copias que necesites conservar.
-
-Las fotografías no reemplazan una inspección presencial de un ingeniero o
-inspector calificado. Si hay desprendimientos, deformación, grietas que crecen
-rápidamente, filtraciones importantes o riesgo para personas, aléjate de la
-zona y solicita atención profesional urgente.
-
-## Estructura
-
-- `app/main.py`: configuración y punto de entrada de Streamlit.
-- `app/home.py`: interfaz, validación de medios, muestreo de video y heurística local.
-- `requirements.txt`: dependencias de la aplicación existente.
+El resultado es preliminar: sombras, juntas, humedad, suciedad y textura pueden
+generar falsos positivos o negativos. Después de un sismo, evacúa si hay
+deformación, desprendimientos, ruidos o daños nuevos y solicita una inspección.

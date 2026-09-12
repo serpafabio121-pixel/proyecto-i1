@@ -49,6 +49,7 @@ if __name__ == "__main__":
     print(f"Celular: http://{ip}:8502")
     print("Usa la IP actual impresa aquí; no reutilices una URL de una ejecución anterior.")
     print("El celular queda limitado a cargar fotos y videos; no usa cámara directa.")
+    print("Mantén esta terminal abierta para que funcionen ambos accesos.")
     print()
     if port_in_use(8501) or port_in_use(8502):
         raise SystemExit("Los puertos 8501 o 8502 ya están ocupados. Cierra otros servidores y vuelve a ejecutar.")
