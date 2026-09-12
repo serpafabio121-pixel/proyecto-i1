@@ -97,31 +97,35 @@ def _read_frame(frame: np.ndarray) -> Image.Image:
 
 
 def _analyze(image: Image.Image) -> Analysis:
-    """Calcula indicadores simples de contraste y bordes; no es un diagnóstico."""
+    """Detecta patrones lineales oscuros con varias señales locales."""
     thumbnail = image.copy()
     thumbnail.thumbnail((640, 640))
-    gray = np.asarray(thumbnail.convert("L"), dtype=np.float32) / 255.0
-
-    # Una grieta suele ser una región oscura y alargada con cambios de intensidad.
-    local_floor = np.minimum.reduce(
-        [
-            gray,
-            np.roll(gray, 1, axis=0),
-            np.roll(gray, -1, axis=0),
-            np.roll(gray, 1, axis=1),
-            np.roll(gray, -1, axis=1),
-        ]
+    gray = np.asarray(thumbnail.convert("L"), dtype=np.uint8)
+    background = cv2.GaussianBlur(gray, (0, 0), 5)
+    local_darkness = cv2.subtract(background, gray)
+    blackhat = cv2.morphologyEx(
+        gray, cv2.MORPH_BLACKHAT,
+        cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (11, 11)),
     )
-    dark = gray < 0.30
-    contrast = (gray - local_floor) > 0.10
-    horizontal = np.abs(np.diff(gray, axis=1, prepend=gray[:, :1]))
-    vertical = np.abs(np.diff(gray, axis=0, prepend=gray[:1, :]))
-    edges = (horizontal + vertical) > 0.24
-    dark_ratio = float(dark.mean())
+    local_threshold = max(16.0, float(np.percentile(local_darkness, 88)) * 0.55)
+    line_threshold = max(18.0, float(np.percentile(blackhat, 88)) * 0.55)
+    dark_lines = (local_darkness >= local_threshold) | (blackhat >= line_threshold)
+    dark_lines = cv2.morphologyEx(
+        dark_lines.astype(np.uint8), cv2.MORPH_CLOSE, np.ones((3, 3), np.uint8)
+    )
+    edges = cv2.Canny(gray, 45, 130) > 0
+    dark_ratio = float(dark_lines.mean())
     edge_ratio = float(edges.mean())
-    crack_score = min(1.0, (dark_ratio * 1.7) + (edge_ratio * 1.25) + float(contrast.mean()) * 0.8)
+    _, _, stats, _ = cv2.connectedComponentsWithStats(dark_lines, 8)
+    elongated = 0.0
+    for width, height, area in stats[1:, [2, 3, 4]]:
+        length = max(width, height)
+        if area >= 8 and length >= 16 and length / max(1, min(width, height)) >= 2.0:
+            elongated += float(area)
+    elongated_ratio = min(1.0, elongated / dark_lines.size * 5.0)
+    crack_score = min(1.0, dark_ratio * 1.25 + edge_ratio * 0.55 + elongated_ratio * 0.70)
 
-    if crack_score < 0.12 or (dark_ratio < 0.008 and edge_ratio < 0.12):
+    if crack_score < 0.02 or (dark_ratio < 0.004 and elongated_ratio < 0.004):
         level, recommendation, urgent = "Sin grieta evidente", (
             "No se observan patrones oscuros lineales claros. Revisa la pared con buena "
             "luz y repite la foto si hay dudas."
@@ -148,11 +152,12 @@ def _analyze(image: Image.Image) -> Analysis:
         ), True
 
     findings = [
-        f"Pixeles oscuros: {dark_ratio * 100:.1f}% de la imagen.",
-        f"Cambios de borde detectados: {edge_ratio * 100:.1f}%.",
-        "La estimación combina oscuridad local, contraste y bordes; puede confundir juntas, sombras o suciedad.",
+        f"Patrones lineales oscuros: {dark_ratio * 100:.1f}% de la imagen.",
+        f"Bordes y cambios de textura: {edge_ratio * 100:.1f}%.",
+        f"Componentes alargados compatibles: {elongated_ratio * 100:.1f}%.",
+        "Puede confundir juntas, sombras, humedad, cables o suciedad con una grieta.",
     ]
-    confidence = int(round(55 + min(35, abs(crack_score - 0.35) * 55)))
+    confidence = int(round(58 + min(32, (dark_ratio + elongated_ratio) * 120)))
     if level == "Sin grieta evidente":
         seismic_risk, seismic_reason = "Bajo", "No se observan señales visuales claras; mantén vigilancia preventiva."
     elif level in {"Leve", "Advertencia"}:
@@ -355,28 +360,12 @@ def show(device_mode: str = "pc") -> None:
     is_mobile = device_mode == "mobile"
     _inject_styles()
     st.markdown(
-        '<section class="hero"><h1>Detector de grietas 🧱</h1>'
-        "<p>Evaluación visual preliminar de paredes desde tu móvil o computadora.</p></section>",
+        '<section class="hero"><h1>Detector de grietas 🧱</h1></section>',
         unsafe_allow_html=True,
     )
-    st.markdown(
-        '<div class="notice"><strong>Importante:</strong> este MVP usa una heurística local '
-        "de contraste y bordes. No reemplaza a un ingeniero, inspector ni diagnóstico estructural."
-        "</div>",
-        unsafe_allow_html=True,
-    )
-    if not is_mobile:
-        with st.expander("Permisos para usar cámara en el celular"):
-            st.write(
-                "Concede permiso de **Cámara** al navegador. Para grabar video desde "
-                "el celular, usa una URL **HTTPS** y permite el acceso cuando el navegador "
-                "lo solicite."
-            )
     st.write("")
 
-    st.subheader("1. Carga una foto o video" if is_mobile else "1. Toma o carga una foto o video")
-    if is_mobile:
-        st.info("Modo celular: carga una foto o video desde tu dispositivo. La cámara directa está desactivada en este acceso.")
+    st.subheader("Carga una foto o video")
     source = st.radio(
         "Origen de la imagen",
         ("Cargar archivo", "Cargar video") if is_mobile else ("Cargar archivo", "Tomar foto", "Cargar video", "Grabar video"),
