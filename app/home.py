@@ -380,9 +380,13 @@ def show(device_mode: str = "pc") -> None:
         label_visibility="collapsed",
     )
     if source == "Tomar foto" and not is_mobile:
-        uploaded = st.camera_input("Toma una foto de la pared")
+        try:
+            uploaded = st.camera_input("Toma una foto de la pared")
+        except Exception as exc:
+            st.warning(f"La cámara no está disponible en este navegador: {exc}")
+            uploaded = None
         if uploaded is None:
-            st.caption("Si la cámara no aparece, revisa los permisos del navegador o usa este selector.")
+            st.caption("Usa el selector para elegir una imagen si la cámara está bloqueada.")
             uploaded = st.file_uploader(
                 "Elegir una foto del dispositivo",
                 type=["jpg", "jpeg", "png", "webp"],
@@ -399,7 +403,16 @@ def show(device_mode: str = "pc") -> None:
         )
         media_kind = "video"
     elif source == "Grabar video":
-        uploaded = _record_video()
+        try:
+            uploaded = _record_video()
+        except Exception as exc:
+            st.warning(f"La grabación no está disponible en este navegador: {exc}")
+            uploaded = None
+            uploaded = st.file_uploader(
+                "Cargar un video como alternativa",
+                type=["mp4", "mov", "avi", "webm", "m4v"],
+                key="recording-fallback",
+            )
         media_kind = "video"
         if uploaded is not None and st.button("Borrar grabación y volver a grabar", type="secondary"):
             recording_path = st.session_state.get("recording_path", "")
