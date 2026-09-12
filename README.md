@@ -36,6 +36,10 @@ No abras las URLs hasta que la terminal muestre `Servidor PC y servidor celular
 activos`; si el proceso termina con un error, los navegadores mostrarán
 `ERR_CONNECTION_REFUSED`.
 
+El despliegue en Streamlit Community Cloud usa Python 3.11 y un conjunto mínimo
+de dependencias. No necesita instalar TensorFlow ni descargar modelos para este
+MVP: el análisis actual es local y heurístico.
+
 La misma aplicación funciona en computador y celular: `start_app.py` inicia dos
 servidores independientes. El PC conserva todas las opciones en
 `http://localhost:8501`. El acceso del celular en
