@@ -22,19 +22,18 @@ python -m pip install -r requirements.txt
 python start_app.py
 ```
 
-El lanzador inicia los dos accesos y mantiene ambos servidores activos:
+El lanzador inicia un único servidor para ambos dispositivos:
 
 ```text
-PC:      http://localhost:8501
-Celular: http://IP_DEL_COMPUTADOR:8502
+PC y celular: http://IP_DEL_COMPUTADOR:8501
 ```
 
-Usa la IP que aparece en la terminal en cada ejecución. El PC conserva todas
-las funciones: tomar foto, grabar video, cargar archivos y analizar. El celular
-queda intencionalmente limitado a **Cargar archivo** y **Cargar video**, sin
-permisos de cámara ni grabación directa.
+Usa la IP que aparece en la terminal. El PC conserva todas las funciones:
+tomar foto, grabar video, cargar archivos y analizar. El celular se detecta
+automáticamente por el navegador y queda limitado a **Cargar archivo** y
+**Cargar video**, sin permisos de cámara ni grabación directa.
 
-Para que el celular abra `http://IP_DEL_COMPUTADOR:8502`, ambos dispositivos
+Para que el celular abra `http://IP_DEL_COMPUTADOR:8501`, ambos dispositivos
 deben estar en la misma red y Windows debe permitir Python en redes privadas.
 GitHub no es la URL de la aplicación: solo almacena el código.
 
